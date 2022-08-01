@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Package extends Model
+{
+    use HasFactory;
+
+    protected $primaryKey = 'packageID';
+    protected $fillable = [
+        'packageID',
+        'trackingNumber',
+        'length',
+        'width',
+        'height',
+        'weight',
+        'senderID',
+        'receiverID',
+        'carrierID',
+        'status',
+    ];
+}
