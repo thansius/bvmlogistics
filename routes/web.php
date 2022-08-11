@@ -41,6 +41,8 @@ Route::get('/packages/delivered', 'App\Http\Controllers\PackageController@getDel
 Route::post('save-customer', 'App\Http\Controllers\CustomerController@storeViaPackage');
 Route::post('getOne', 'App\Http\Controllers\PackageController@getPackage');
 Route::post('save-update', 'App\Http\Controllers\PackageController@updatePackageStatus');
+Route::post('save-profile', 'App\Http\Controllers\EmployeeController@updateProfile');
+Route::post('save-password', 'App\Http\Controllers\EmployeeController@updatePassword');
 Route::resource('packages', PackageController::class);
 
 // Auth::routes();
@@ -50,6 +52,7 @@ Route::resource('packages', PackageController::class);
 Route::get('dashboard', [App\Http\Controllers\CustomAuthController::class, 'dashboard']);
 Route::get('/login', [App\Http\Controllers\CustomAuthController::class, 'index'])->name('login');
 Route::get('/logout', function() {return view('landing');});
+Route::get('users/profile', function() {return view('users/profile');})->name('user.profile');
 Route::get('/', function() {return view('landing');});
 Route::get('/about', function() {return view('about');});
 Route::get('/contact', function() {return view('contact');});

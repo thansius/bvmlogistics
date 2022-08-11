@@ -32,16 +32,24 @@ class CustomAuthController extends Controller
                         ->withSuccess('Signed in');
         }
   
-        return redirect("login")->withSuccess('Login details are not valid');
+        return back()->with('error','Login credentials are not valid');
     }
 
     public static  function getName(){
         $userData = DB::table('users')
                     ->join('employees', 'users.username', '=', 'employees.employeeID')
-                    ->select('employees.firstName', 'employees.lastName')
+                    ->select('employees.firstName', 'employees.lastName', 'employees.position')
                     ->where('username', auth()->user()->username)->first();
         // echo "<script>console.log('Debug Objects: " . $userData . "' );</script>";
         return json_decode(json_encode($userData), true);
+    }
+
+    public static function getUser(){
+        $data = DB::table('users')
+                    ->join('employees', 'users.username', '=','employees.employeeID')
+                    ->select('employees.*', 'users.*')
+                    ->where('username', Auth::user()->username)->first();
+        return json_decode(json_encode($data), true);
     }
 
     // public function registration()

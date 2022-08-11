@@ -71,9 +71,9 @@
             </button>
             <div class="collapse navbar-collapse justify-content-between px-lg-3" id="navbarCollapse">
                 <div class="navbar-nav m-auto py-0">
-                    <a href="/" class="nav-item nav-link active">Home</a>
+                    <a href="/" class="nav-item nav-link ">Home</a>
                     <a href="/about" class="nav-item nav-link">About</a>
-                    <a href="/service" class="nav-item nav-link">Service</a>
+                    <a href="/service" class="nav-item nav-link active">Service</a>
                     <a href="/contact" class="nav-item nav-link">Contact</a>
                 </div>
                 <a href="/login" class="btn btn-primary py-2 px-4 d-none d-lg-block">Login</a>

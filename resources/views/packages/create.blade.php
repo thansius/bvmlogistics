@@ -22,6 +22,13 @@
                 {{ session("status") }}
             </div>
             @endif
+            
+            <br id="bre">
+
+            <div class="alert alert-danger" id="err" role="alert" >
+                {{-- {{ session("status") }} --}}
+                
+            </div>
             <form
                 action="{{ route('packages.store') }}"
                 method="POST"
@@ -80,8 +87,9 @@
                                 <div class="input-group">
                                     <input
                                         type="number"
-                                        name="length"
-                                        class="form-control"
+                                        name="length"                                        
+                                        id="length"
+                                        class="form-control numeric"
                                         placeholder="Length"
                                         min="1"
                                     />
@@ -103,8 +111,9 @@
                                 <div class="input-group">
                                     <input
                                         type="number"
+                                        id="width"
                                         name="width"
-                                        class="form-control"
+                                        class="form-control numeric"
                                         placeholder="Width"
                                         min="1"
                                     />
@@ -127,7 +136,8 @@
                                     <input
                                         type="number"
                                         name="height"
-                                        class="form-control"
+                                        id="height"
+                                        class="form-control numeric"
                                         placeholder="Height"
                                         min="1"
                                     />
@@ -148,9 +158,10 @@
                                 <strong>Package Weight:</strong>
                                 <div class="input-group">
                                     <input
-                                        type="number"
+                                        {{-- type='number' step='0.001' max="999999.999" --}}
                                         name="weight"
-                                        class="form-control"
+                                        id="weight"
+                                        class="form-control numeric"
                                         placeholder="Weight"
                                         min="1"
                                     />
@@ -475,6 +486,7 @@
                                                     </div>
 
                                                     <script type="text/javascript">
+                                                    
                                                         document.getElementById('province').onchange = function() {
                                                                 var provinceID = $(this).val();
                                                                 console.log('province changed');
@@ -1227,6 +1239,119 @@
                 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
                 <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.3.1/js/buttons.html5.min.js"></script>
                     <script>
+                        $(document).ready(function() {	
+                            $('#err').hide();
+                            $('#bre').hide();
+                            // setInputFilter(document.getElementById("weight"), function(value) {
+                            //     return /^\d*\.?\d*$/.test(value); // Allow digits and '.' only, using a RegExp
+                            // }, "Only digits and '.' are allowed");
+                            // setInputFilter(document.getElementById("width"), function(value) {
+                            //     return /^\d*\.?\d*$/.test(value); // Allow digits and '.' only, using a RegExp
+                            // }, "Only digits and '.' are allowed");
+                            // setInputFilter(document.getElementById("length"), function(value) {
+                            //     return /^\d*\.?\d*$/.test(value); // Allow digits and '.' only, using a RegExp
+                            // }, "Only digits and '.' are allowed");
+                            // setInputFilter(document.getElementById("height"), function(value) {
+                            //     return /^\d*\.?\d*$/.test(value); // Allow digits and '.' only, using a RegExp
+                            // }, "Only digits and '.' are allowed");
+
+                            // $("#weight").forceNumeric();
+
+                            // $('#weight').bind('input paste', function(){
+                            //     this.value = this.value.replace(/[^\d*\.?\d+$]/g,'');
+                            // });
+
+                            $(".numeric").keydown(function (event) {
+                            if (event.shiftKey == true) {
+                                event.preventDefault();
+                            }
+
+                            if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105) || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 37 || event.keyCode == 39 || event.keyCode == 46 || event.keyCode == 190) {
+
+                            } else {
+                                event.preventDefault();
+                            }
+
+                            if($(this).val().indexOf('.') !== -1 && event.keyCode == 190 )
+                                event.preventDefault();
+
+                            });
+                        });
+
+                        // $(function () {
+                        //     $("input[id*='txtQty']").keydown(function (event) {
+
+
+                        //         if (event.shiftKey == true) {
+                        //             event.preventDefault();
+                        //         }
+
+                        //         if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105) || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 37 || event.keyCode == 39 || event.keyCode == 46 || event.keyCode == 190) {
+
+                        //         } else {
+                        //             event.preventDefault();
+                        //         }
+                                
+                        //         if($(this).val().indexOf('.') !== -1 && event.keyCode == 190)
+                        //             event.preventDefault();
+
+                        //     });
+                        // });
+
+
+                        // jQuery.fn.forceNumeric = function () {
+                        //     return this.each(function () {
+                        //         $(this).keydown(function (e) {
+                        //             var key = e.which || e.keyCode;
+
+                        //             if (!e.shiftKey && !e.altKey && !e.ctrlKey &&
+                        //             // numbers   
+                        //                 key >= 48 && key <= 57 ||
+                        //             // Numeric keypad
+                        //                 key >= 96 && key <= 105 ||
+                        //             // comma, period and minus, . on keypad
+                        //                 key == 190 || key == 188 || key == 109 || key == 110 ||
+                        //             // Backspace and Tab and Enter
+                        //                 key == 8 || key == 9 || key == 13 ||
+                        //             // Home and End
+                        //                 key == 35 || key == 36 ||
+                        //             // left and right arrows
+                        //                 key == 37 || key == 39 ||
+                        //             // Del and Ins
+                        //                 key == 46 || key == 45)
+                        //                 return true;
+
+                        //             return false;
+                        //         });
+                        //     });
+                        // }
+
+                        // function setInputFilter(textbox, inputFilter, errMsg) {
+                        //     ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop", "focusout"].forEach(function(event) {
+                        //         textbox.addEventListener(event, function(e) {
+                        //         if (inputFilter(this.value)) {
+                        //             // Accepted value
+                        //             if (["keydown","mousedown","focusout"].indexOf(e.type) >= 0){
+                        //             this.classList.remove("input-error");
+                        //             this.setCustomValidity("");
+                        //             }
+                        //             this.oldValue = this.value;
+                        //             this.oldSelectionStart = this.selectionStart;
+                        //             this.oldSelectionEnd = this.selectionEnd;
+                        //         } else if (this.hasOwnProperty("oldValue")) {
+                        //             // Rejected value - restore the previous one
+                        //             this.classList.add("input-error");
+                        //             this.setCustomValidity(errMsg);
+                        //             this.reportValidity();
+                        //             this.value = this.oldValue;
+                        //             this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+                        //         } else {
+                        //             // Rejected value - nothing to restore
+                        //             this.value = "";
+                        //         }
+                        //         });
+                        //     });
+                        //     };
                         function searchCarrier() {
                             // Declare variables
                             var input, filter, table, tr, td, i, txtValue;
@@ -1415,7 +1540,20 @@
 
                     <script>
                         function submitForm(){
-                            document.packageForm.submit();
+                            if($('input[name="senderID"]').val() != $('input[name="receiverID"]').val())
+                            {
+                                document.packageForm.submit();
+                            }else{
+                                $('#err').show();
+                                $('#bre').show();
+                                $("#err").html("You cannot have the same sender and receiver");
+                                $("#err").fadeTo(2000, 500).slideUp(500, function(){
+                                        $("#err").slideUp(500);
+                                });
+                                $("#bre").fadeTo(2000, 500).slideUp(500, function(){
+                                        $("#bre").slideUp(500);
+                                });
+                            }
                         }
                     </script>
                     

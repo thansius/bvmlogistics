@@ -269,6 +269,7 @@ return [
         [
             'text'        => 'Packages',
             'icon'        => 'fas fa-box',
+            'can'         => ['isAdmin', 'isManager', 'isStaff'],
             'submenu'     => [
                 [
                     'text' => 'Package Records',
@@ -293,17 +294,12 @@ return [
                 ],
             ]
         ],
-        // ['header' => 'account_settings'],
-        // [
-        //     'text' => 'profile',
-        //     'url'  => 'admin/settings',
-        //     'icon' => 'fas fa-fw fa-user',
-        // ],
-        // [
-        //     'text' => 'change_password',
-        //     'url'  => 'admin/settings',
-        //     'icon' => 'fas fa-fw fa-lock',
-        // ],
+        ['header' => 'account_settings'],
+        [
+            'text' => 'profile',
+            'url'  => 'users/profile',
+            'icon' => 'fas fa-fw fa-user',
+        ]
         // [
         //     'text'    => 'multilevel',
         //     'icon'    => 'fas fa-fw fa-share',

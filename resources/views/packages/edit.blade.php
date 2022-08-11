@@ -28,7 +28,7 @@
                             <?php
                                 use App\Http\Controllers\PackageController;
                                 $packageData = PackageController::getPackage($package->packageID);
-                                $packageProgress = PackageController::getPackageProgress($package->trackingNumber);
+                                $packageProgress = PackageController::getPackageProgressEdit($package->trackingNumber);
                             ?>
                             <fieldset class="packageDetails">
 
@@ -88,15 +88,17 @@
                                                 <th>Date of Last Status</th>
                                                 <th></th>
                                                 <th>Transaction Status</th>
+                                                <th>Updated By</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @if ($packageProgress != null)
                                                 @foreach ($packageProgress as $packProg)
                                                     <tr>
-                                                        <td>{{ \Carbon\Carbon::parse($packProg->date)->format('F j, Y  g:i A') }}</td>
+                                                        <td>{{ \Carbon\Carbon::parse($packProg->pdate)->format('F j, Y  g:i A') }}</td>
                                                         <td><i class="fas fa-check" style="color: green"></i></td>
                                                         <td>{{ $packProg->description }}</td>
+                                                        <td>{{ $packProg->firstName.' '.$packProg->lastName }}</td>
                                                     </tr>
                                                 @endforeach
                                             @else

@@ -226,7 +226,6 @@ class CustomerController extends Controller
 
         DB::table('customers')
         ->where('id', $id)  // find your user by their email
-        ->limit(1)  // optional - to ensure only one record is updated.
         ->update(array('status' => 0));
         return redirect()->route('customers.index')
             ->with('success', 'Customer has been deleted successfully.');

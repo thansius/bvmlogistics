@@ -239,13 +239,26 @@
                     "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
                     "paging": true, 
                     "buttons": [
-                        'csvHtml5',
-                        'excelHtml5',
-                        'pdf',
-                        'print'
-                    ],
-                    
-                }   
+                        {
+                            extend: 'pdf',
+                            title: 'BVM Sanchez & Son Global Logistics \n LIST OF EMPLOYEES',
+                            pageSize: 'letter',
+                            exportOptions: {
+                                columns: [ 0, 1, 2, 3, 4, 5, 6, 7 ]
+                            }
+                        },
+                        {
+                            extend: 'excelHtml5',
+                            title: 'BVM Sanchez & Son Global Logistics \n LIST OF EMPLOYEES',
+                            exportOptions: {
+                                columns: [ 0, 1, 2, 3, 4, 5, 6, 7 ]
+                            }
+                        },
+                        // 'csvHtml5',
+                        // 'excelHtml5',
+                        // 'pdf',
+                        // 'print'
+                    ],}
             );
 
             table.buttons().container()

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Package;
+use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class PackageController extends Controller
@@ -32,7 +34,7 @@ class PackageController extends Controller
         r.firstName as 'recF', r.lastName as 'recL', 
         r.contactNumber, r.floor_unit, r.streetAddress, 
         refbrgys.brgyDesc as 'barangay', refcitymuns.citymunDesc as 'city_municipality', refprovinces.provDesc as 'province', r.zipCode, 
-        status FROM packages 
+        packages.status FROM packages 
         JOIN employees ON packages.carrierID = employees.employeeID 
         JOIN customers AS s ON packages.senderID = s.id 
         JOIN customers AS r ON packages.receiverID = r.id
@@ -50,14 +52,14 @@ class PackageController extends Controller
         r.firstName as 'recF', r.lastName as 'recL', 
         r.contactNumber, r.floor_unit, r.streetAddress, 
         refbrgys.brgyDesc as 'barangay', refcitymuns.citymunDesc as 'city_municipality', refprovinces.provDesc as 'province', r.zipCode, 
-        status FROM packages 
+        packages.status FROM packages 
         JOIN employees ON packages.carrierID = employees.employeeID 
         JOIN customers AS s ON packages.senderID = s.id 
         JOIN customers AS r ON packages.receiverID = r.id
         JOIN refprovinces ON r.province = refprovinces.provCode
         JOIN refcitymuns ON r.city_municipality = refcitymuns.citymunCode
         JOIN refbrgys ON r.barangay = refbrgys.brgyCode 
-        WHERE status = 1 ORDER BY packageID desc;");
+        WHERE packages.status = 1 ORDER BY packageID desc;");
         return view('packages.inwarehouse', $data);
     }
     public function getInTransit()
@@ -68,14 +70,14 @@ class PackageController extends Controller
         r.firstName as 'recF', r.lastName as 'recL', 
         r.contactNumber, r.floor_unit, r.streetAddress, 
         refbrgys.brgyDesc as 'barangay', refcitymuns.citymunDesc as 'city_municipality', refprovinces.provDesc as 'province', r.zipCode, 
-        status FROM packages 
+        packages.status FROM packages 
         JOIN employees ON packages.carrierID = employees.employeeID 
         JOIN customers AS s ON packages.senderID = s.id 
         JOIN customers AS r ON packages.receiverID = r.id
         JOIN refprovinces ON r.province = refprovinces.provCode
         JOIN refcitymuns ON r.city_municipality = refcitymuns.citymunCode
         JOIN refbrgys ON r.barangay = refbrgys.brgyCode 
-        WHERE status = 2 ORDER BY packageID desc;");
+        WHERE packages.status = 2 ORDER BY packageID desc;");
         return view('packages.intransit', $data);
     }
     public function getDelivered()
@@ -86,14 +88,14 @@ class PackageController extends Controller
         r.firstName as 'recF', r.lastName as 'recL', 
         r.contactNumber, r.floor_unit, r.streetAddress, 
         refbrgys.brgyDesc as 'barangay', refcitymuns.citymunDesc as 'city_municipality', refprovinces.provDesc as 'province', r.zipCode, 
-        status FROM packages 
+        packages.status FROM packages 
         JOIN employees ON packages.carrierID = employees.employeeID 
         JOIN customers AS s ON packages.senderID = s.id 
         JOIN customers AS r ON packages.receiverID = r.id
         JOIN refprovinces ON r.province = refprovinces.provCode
         JOIN refcitymuns ON r.city_municipality = refcitymuns.citymunCode
         JOIN refbrgys ON r.barangay = refbrgys.brgyCode 
-        WHERE status = 3 ORDER BY packageID desc;");
+        WHERE packages.status = 3 ORDER BY packageID desc;");
         return view('packages.delivered', $data);
     }
 
@@ -130,7 +132,9 @@ class PackageController extends Controller
         $package->save();
 
         DB::table('package_trackings')->insert(
-            ['trackingNumber' => $request->trackingNumber, 'description' => 'Package arrived at warehouse']
+            ['trackingNumber' => $package->trackingNumber, 'description' => 'Package arrived at warehouse', 'employeeID' => Auth::user()->username, 
+            "created_at" =>  \Carbon\Carbon::now('GMT+8'), 
+                "updated_at" => \Carbon\Carbon::now('GMT+8'),]  
         );
 
         return redirect()->route('packages.index')
@@ -200,6 +204,22 @@ class PackageController extends Controller
         return $packageCount;
     }
 
+    public static function countToDeliver(){
+        $packageCount = Package::orWhere(function ($query)  {
+                            $query->where('status', '!=', '0')
+                                  ->where('status', '!=', '3')
+                                  ->where('status', '!=', '4');}) 
+                        ->where('carrierID', '=',Auth::user()->username)  
+                        ->count();
+        return $packageCount;
+    }
+    public static function countDelivered(){
+        $packageCount = Package::where('status', '=', '3')
+                        ->where('carrierID', Auth::user()->username)        
+                        ->count();
+        return $packageCount;
+    }
+
     public static function getNextID(){
         $statement = DB::select("SHOW TABLE STATUS LIKE 'packages'");
         $nextId = $statement[0]->Auto_increment;
@@ -224,7 +244,7 @@ class PackageController extends Controller
         r.firstName as 'recF', r.lastName as 'recL', 
         r.contactNumber, r.floor_unit, r.streetAddress, 
         refbrgys.brgyDesc as 'barangay', refcitymuns.citymunDesc as 'city_municipality', refprovinces.provDesc as 'province', r.zipCode, 
-        status FROM packages 
+        packages.status FROM packages 
         JOIN employees ON packages.carrierID = employees.employeeID 
         JOIN customers AS s ON packages.senderID = s.id 
         JOIN customers AS r ON packages.receiverID = r.id
@@ -245,6 +265,7 @@ class PackageController extends Controller
         $trackingNumber = $request->trackingNumber;
         $stat = $request->stat;
         $statDesc = $request->description;
+        $employee = Auth::user()->username;
 
         if($stat === 'Delivered'){
             DB::table('packages')
@@ -265,14 +286,21 @@ class PackageController extends Controller
         }
         
         DB::table('package_trackings')->insert(
-            ['trackingNumber' => $trackingNumber, 'description' => $statDesc]
+            ['trackingNumber' => $trackingNumber, 'description' => $statDesc, 'employeeID' => $employee, 
+            "created_at" =>  \Carbon\Carbon::now('GMT+8'), 
+                "updated_at" => \Carbon\Carbon::now('GMT+8'),]  
         );
         
         return 'update successful';
     }
 
     public static function getPackageProgress($trackingNumber){
-        $data = DB::select("SELECT * FROM `package_trackings` WHERE `trackingNumber` = '$trackingNumber' ORDER BY `date` DESC;");
+        $data = DB::select("SELECT * FROM `package_trackings` WHERE `trackingNumber` = '$trackingNumber' ORDER BY `created_at` DESC;");
+        return $data;
+    }
+
+    public static function getPackageProgressEdit($trackingNumber){
+        $data = DB::select("SELECT *, pt.created_at as `pdate` FROM `package_trackings` as `pt` JOIN `employees` as `em` ON pt.employeeID = em.employeeID WHERE `trackingNumber` = '$trackingNumber' ORDER BY pt.created_at DESC;");
         return $data;
     }
 
@@ -281,5 +309,43 @@ class PackageController extends Controller
         $package->delete();
         return redirect()->route('packages.index')
             ->with('success', 'Package has been deleted successfully.');
+    }
+
+    public static function getToDeliver(){
+        $id = Auth::user()->username;
+        $data = DB::select("SELECT packageID, trackingNumber, length, width, height, weight, 
+        employees.firstName, employees.lastName, 
+        s.firstName as 'senderF', s.lastName as 'senderL', 
+        r.firstName as 'recF', r.lastName as 'recL', 
+        r.contactNumber, r.floor_unit, r.streetAddress, 
+        refbrgys.brgyDesc as 'barangay', refcitymuns.citymunDesc as 'city_municipality', refprovinces.provDesc as 'province', r.zipCode, 
+        packages.status FROM packages 
+        JOIN employees ON packages.carrierID = employees.employeeID 
+        JOIN customers AS s ON packages.senderID = s.id 
+        JOIN customers AS r ON packages.receiverID = r.id
+        JOIN refprovinces ON r.province = refprovinces.provCode
+        JOIN refcitymuns ON r.city_municipality = refcitymuns.citymunCode
+        JOIN refbrgys ON r.barangay = refbrgys.brgyCode 
+        WHERE carrierID = $id AND (packages.status = 1 OR packages.status = 2) ORDER BY packageID desc;");
+        return $data;
+    }
+
+    public static function getDeliveredCarrier(){
+        $id = Auth::user()->username;
+        $data = DB::select("SELECT packageID, trackingNumber, length, width, height, weight, 
+        employees.firstName, employees.lastName, 
+        s.firstName as 'senderF', s.lastName as 'senderL', 
+        r.firstName as 'recF', r.lastName as 'recL', 
+        r.contactNumber, r.floor_unit, r.streetAddress, 
+        refbrgys.brgyDesc as 'barangay', refcitymuns.citymunDesc as 'city_municipality', refprovinces.provDesc as 'province', r.zipCode, 
+        packages.status FROM packages 
+        JOIN employees ON packages.carrierID = employees.employeeID 
+        JOIN customers AS s ON packages.senderID = s.id 
+        JOIN customers AS r ON packages.receiverID = r.id
+        JOIN refprovinces ON r.province = refprovinces.provCode
+        JOIN refcitymuns ON r.city_municipality = refcitymuns.citymunCode
+        JOIN refbrgys ON r.barangay = refbrgys.brgyCode 
+        WHERE carrierID = $id AND packages.status = 3 ORDER BY packageID desc;");
+        return $data;
     }
 }

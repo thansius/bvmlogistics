@@ -27,6 +27,7 @@ class CreateCustomersTable extends Migration
               $table->string('city_municipality');
               $table->string('barangay');
               $table->integer('zipCode')->nullable();
+              $table->smallInteger('status');
               $table->timestamps();
           });
         }

@@ -36,48 +36,48 @@
                                 id="employees"
                                 class="table table-hover table-striped table-bordered dt-responsive display"
                             >
-                                <thead class="text-center align-center">
+                                <thead class="text-center">
                                     <tr>
-                                        <th>Package ID</th>
-                                        <th>Tracking Number</th>
-                                        <th>Dimensions (LxWxH Wt)</th>
-                                        <th>Sender Name</th>
-                                        <th>Receiver Name</th>
-                                        <th>Destination</th>
-                                        <th>Receiver Contact Number</th>
-                                        <th>Carrier Name</th>
-                                        <th>Status</th>
-                                        <th width="100px">Action</th>
+                                        <th class="text-center align-middle" >Package ID</th>
+                                        <th class="text-center align-middle">Tracking Number</thz>
+                                        <th class="text-center align-middle">Dimensions (LxWxH Wt)</th>
+                                        <th class="text-center align-middle">Sender Name</th>
+                                        <th class="text-center align-middle">Receiver Name</th>
+                                        <th class="text-center align-middle">Destination</th>
+                                        <th class="text-center align-middle">Receiver Contact Number</th>
+                                        <th class="text-center align-middle">Carrier Name</th>
+                                        <th class="text-center align-middle">Status</th>
+                                        <th width="70px" class="text-center align-middle">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @if (count($packages) <= 0)
                                         <tr>
-                                            <td colspan="9" class="text-center"> No Packages Yet </td>
+                                            <td colspan="10" class="text-center"> No Packages Yet </td>
                                         </tr>
                                     @endif
                                     @foreach ($packages as $package)
                                     <tr>
                                         <td>{{ $package->packageID }}</td>
                                         <td>{{ $package->trackingNumber }}</td>
-                                        <td>{{ $package->length.'cm x '.$package->width.'cm x '.$package->height.'cm x W:'.$package->weight.'kg' }}</td>
+                                        <td>{{ $package->length.'cm x '.$package->width.'cm x '.$package->height.'cm Wt:'.$package->weight.'kg' }}</td>
                                         <td>{{ $package->senderF.' '.$package->senderL }}</td>
                                         <td>{{ $package->recF.' '.$package->recL }}</td>
                                         <td>{{ $package->floor_unit.', '.$package->streetAddress.', '.$package->barangay.', '.$package->city_municipality.', '.$package->province.' '.$package->zipCode }}</td>
                                         <td>{{ $package->contactNumber }}</td>
                                         <td>{{ $package->firstName.' '.$package->lastName }}</td>
                                         @if ( $package->status == '1' )
-                                            <td><span class="badge rounded-pill bg-secondary">In Warehouse</span></td>
+                                            <td class="text-center align-middle"><span class="badge rounded-pill bg-secondary">In Warehouse</span></td>
                                         @elseif ( $package->status == '0' )
-                                            <td><span class="badge rounded-pill bg-danger">Cancelled</span></td>
+                                            <td class="text-center align-middle"><span class="badge rounded-pill bg-danger">Cancelled</span></td>
                                         @elseif ( $package->status == '2' )
-                                            <td><span class="badge rounded-pill bg-primary">In Transit</span></td>
+                                            <td class="text-center align-middle"><span class="badge rounded-pill bg-primary">In Transit</span></td>
                                         @elseif ( $package->status == '3' )
-                                            <td><span class="badge rounded-pill bg-success">Delivered</span></td>
+                                            <td class="text-center  align-middle"><span class="badge rounded-pill bg-success">Delivered</span></td>
                                         @elseif ( $package->status == '4')
-                                            <td><span class="badge rounded-pill bg-warning">Delivery Failed</span></td>
+                                            <td class="text-center  align-middle"><span class="badge rounded-pill bg-warning">Delivery Failed</span></td>
                                         @endif
-                                        <td>
+                                        <td class="text-center align-middle">
                                             {{-- <form
                                                 action="{{ route('packages.destroy',$package->packageID) }}"
                                                 method="Post"
@@ -103,12 +103,12 @@
                                             </form> --}}
 
                                             <a
-                                                    class="btn btn-primary"
+                                                    class="btn btn-primary btn-sm"
                                                     href="{{ route('packages.edit',$package->packageID) }}"
                                                     ><small
                                                         class="fas fa-eye"
                                                     ></small
-                                                    >View</a
+                                                    > View</a
                                                 >
                                         </td>
                                     </tr>
@@ -151,11 +151,27 @@
                     "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
                     "paging": true, 
                     "buttons": [
-                        'csvHtml5',
-                        'excelHtml5',
-                        'pdf',
-                        'print'
-                    ],
+                        {
+                            extend: 'pdf',
+                            title: 'BVM Sanchez & Son Global Logistics \n LIST OF PACKAGES',
+                            orientation: 'landscape',
+                            pageSize: 'LEGAL',
+                            exportOptions: {
+                                columns: [ 0, 1, 2, 3, 4, 5, 6, 7,8 ]
+                            }
+                        },
+                        {
+                            extend: 'excelHtml5',
+                            title: 'BVM Sanchez & Son Global Logistics \n LIST OF PACKAGES',
+                            exportOptions: {
+                                columns: [ 0, 1, 2, 3, 4, 5, 6, 7,8 ]
+                            }
+                        },
+                        // 'csvHtml5',
+                        // 'excelHtml5',
+                        // 'pdf',
+                        // 'print'
+                    ]
                     
                 }   
             );

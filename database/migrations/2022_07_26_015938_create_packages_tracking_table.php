@@ -17,6 +17,7 @@ class CreatePackagesTrackingTable extends Migration
             $table->id();
             $table->text('trackingNumber');
             $table->text('description');
+            $table->bigInteger('employeeID');
             $table->timestamps();
         });
     }

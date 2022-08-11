@@ -38,12 +38,13 @@
                             >
                                 <thead >
                                     <tr>
-                                        <th class="text-center">Last Name</th>
-                                        <th class="text-center">First Name</th>
-                                        <th class="text-center">Middle Name</th>
-                                        <th class="text-center">Address</th>
-                                        <th class="text-center">Contact Number</th>
-                                        <th class="text-center" width="60px">Action</th>
+                                        <th class="text-center align-middle">#</th>
+                                        <th class="text-center align-middle">Last Name</th>
+                                        <th class="text-center align-middle">First Name</th>
+                                        <th class="text-center align-middle">Middle Name</th>
+                                        <th class="text-center align-middle">Address</th>
+                                        <th class="text-center align-middle">Contact Number</th>
+                                        <th class="text-center align-middle" width="60px">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -54,6 +55,7 @@
                                     @else
                                     @foreach ($customers as $customer)
                                     <tr>
+                                        <td></td>
                                         <td>{{ $customer->lastName }}</td>
                                         <td>{{ $customer->firstName }}</td>
                                         <td>{{ $customer->middleName }}</td>
@@ -72,7 +74,7 @@
                                                 @csrf @method('DELETE')
                                                 <a
                                                     href="#myModal"
-                                                    class="btn btn-danger btn-sm"
+                                                    class="btn btn-danger btn-sm delete"
                                                     data-toggle="modal"
                                                     data-target="#myModal"
                                                     data-id="{{ $customer->id }}"
@@ -227,24 +229,51 @@
                         let id = $(this).attr('data-id');
                         $('#id').val(id);
                     });
+
+            
             var table = $('#employees').DataTable(
                 {
                     "dom": "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
                     "<'row'<'col-sm-12'tr>>" +
                     "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
                     "paging": true, 
+                    "order": [[1, 'asc']],
                     "buttons": [
-                        'csvHtml5',
-                        'excelHtml5',
-                        'pdf',
-                        'print'
+                        {
+                            extend: 'pdf',
+                            title: 'BVM Sanchez & Son Global Logistics \n LIST OF CUSTOMERS',
+                            orientation: 'landscape',
+                            pageSize: 'letter',
+                            exportOptions: {
+                                columns: [ 0, 1, 2, 3, 4, 5 ]
+                            }
+                        },
+                        {
+                            extend: 'excelHtml5',
+                            title: 'BVM Sanchez & Son Global Logistics \n LIST OF CUSTOMERS',
+                            exportOptions: {
+                                columns: [ 0, 1, 2, 3, 4, 5 ]
+                            }
+                        },
+                        // 'csvHtml5',
+                        // 'excelHtml5',
+                        // 'pdf',
+                        // 'print'
                     ],
                     
                 }   
             );
 
             table.buttons().container()
-                .appendTo( '#employees_wrapper .col-md-6:eq(0)' );    
+                .appendTo( '#employees_wrapper .col-md-6:eq(0)' );
+                
+                table.on('order.dt search.dt', function () {
+                    let i = 1;
+            
+                    table.cells(null, 0, { search: 'applied', order: 'applied' }).every(function (cell) {
+                        this.data(i++);
+                    });
+                }).draw();
         </script>
 
         <style>

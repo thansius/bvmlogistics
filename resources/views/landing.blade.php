@@ -132,7 +132,7 @@
 
                                 trHTML +=
                                     '<tr><td>'
-                                    +   my_date_format(userData.date)
+                                    +   my_date_format(userData.created_at)
                                     + '</td><td><i class="fas fa-check" style="color: green"></i></td><td>'
                                     + userData.description 
                                     + '</td></tr>';
