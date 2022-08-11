@@ -15,7 +15,7 @@ class CreateEmployeesTable extends Migration
     public function up()
     {
         Schema::create('employees', function (Blueprint $table) {
-            $table->bigIncrements('employeeID');
+            $table->bigIncrements('employeeID')->startingValue(20220001);
             $table->string('lastName');
             $table->string('firstName');
             $table->string('middleName')->nullable();
@@ -26,7 +26,7 @@ class CreateEmployeesTable extends Migration
             $table->timestamps();
         });
 
-        DB::statement("ALTER TABLE employees AUTO_INCREMENT = 20220001;");
+        // DB::update("ALTER TABLE employees AUTO_INCREMENT = 20220001;");
     }
 
     /**
