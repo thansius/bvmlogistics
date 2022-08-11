@@ -9,7 +9,7 @@ class PhilProvinceController extends Controller
 {
     
     public static function getProvinces(){
-        $provinces = DB::table('refProvinces')
+        $provinces = DB::table('refprovinces')
                     ->select('provDesc','provCode')
                     ->orderBy('provDesc', 'ASC')
                     ->get();

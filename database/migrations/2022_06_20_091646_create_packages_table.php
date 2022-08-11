@@ -15,7 +15,7 @@ class CreatePackagesTable extends Migration
     public function up()
     {
         Schema::create('packages', function (Blueprint $table) {
-            $table->bigIncrements('packageID')->startingValue(10001);
+            $table->bigIncrements('packageID');
             $table->text('trackingNumber');
             $table->double('length');
             $table->double('width');
@@ -27,7 +27,7 @@ class CreatePackagesTable extends Migration
             $table->smallInteger('status');
             $table->timestamps();
         });
-        // DB::update("ALTER TABLE packages AUTO_INCREMENT = 10001;");
+        DB::statement("ALTER TABLE packages AUTO_INCREMENT = 10001;");
     }
 
     /**
