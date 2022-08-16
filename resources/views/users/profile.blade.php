@@ -309,6 +309,16 @@
                                 if(response=='success'){
                                     $('#succ').show();
                                     $("#succ").html("Password has been updated successfully!");
+
+                                    $("#oldPw").prop("disabled",true);
+                                    $("#oldPw").val("");
+                                    $("#newPW").prop("disabled",true);
+                                    $("#newPW").val("");
+                                    $("#connewPW").prop("disabled",true);
+                                    $("#connewPW").val("");
+                                    $("#savePW").prop("disabled", true);
+                                    $("#updatePW").prop("disabled", false);
+
                                     $("#succ").fadeTo(2000, 500).slideUp(500, function(){
                                         $("#succ").slideUp(500);
                                     });
