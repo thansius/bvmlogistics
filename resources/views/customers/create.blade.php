@@ -5,7 +5,7 @@
             <div class="row">
                 <div class="col-lg-12 margin-tb">
                     <div class="pull-left mb-2">
-                        <h2 style="display: inline-block">Add Employee</h2>
+                        <h2 style="display: inline-block">Add Customer</h2>
                         <a
                             class="btn btn-secondary float-right"
                             href="{{ route('customers.index') }}"
