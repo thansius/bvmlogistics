@@ -6,11 +6,10 @@
                 <div class="row">
                     <div class="col-lg-12 margin-tb">
                         <div class="pull-left">
-                            <h2>Edit Company</h2>
-                        </div>
-                        <div class="pull-right">
+                            <h2 style="display: inline-block">Edit Company</h2>
                             <a
-                                class="btn btn-secondary"
+                                class="btn btn-secondary float-right"
+                                style="width: 100px"
                                 href="{{ route('employees.index') }}"
                                 enctype="multipart/form-data"
                             >
@@ -24,6 +23,9 @@
                     {{ session("status") }}
                 </div>
                 @endif
+                <div class="alert alert-success" id="succ" role="alert">
+                    {{-- <p>{{ $message }}</p> --}}
+                </div>
                 <form
                     action="{{ route('employees.update',$employee->employeeID) }}"
                     method="POST"
@@ -33,23 +35,32 @@
                     @csrf @method('PUT')
 
                     <div class="form-row">
-                        <div class="col-auto">
-                            <div class="form-group">
+                        <div class="col-xs-12 col-sm-12 col-md-3">
+                        
+                        <div class="form-group">
                                 <strong>Employee ID:</strong>
                                 <input
                                     type="text"
                                     name="employeeID"
                                     class="form-control"
                                     placeholder="Employee ID"
+                                    id="employeeID"
                                     value="{{ $employee->employeeID }}"
                                     readonly
                                 />
+                                
+
                                 @error('employeeID')
                                 <div class="alert alert-danger mt-1 mb-1">
                                     {{ $message }}
                                 </div>
                                 @enderror
                             </div>
+
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-3">
+                            <br>
+                            <a onclick="resetPassword()" class="btn btn-outline-primary">Reset Password</a>
                         </div>
                     </div>
                     <div class="form-row">
@@ -220,6 +231,7 @@
             
             <script>
                 $(document).ready(function() {	
+                    $('#succ').hide();
                     var number = $('#contactNumber').val().replace(/[^\d]/g, '')
                         if (number.length == 7) {
                             number = number.replace(/(\d{3})(\d{4})/, "$1-$2");
@@ -251,6 +263,33 @@
                 };
 
                 $(phoneFormatter);
+
+                function resetPassword(){
+                    event.preventDefault();
+
+                    let empID = $('#employeeID').val();
+                        $.ajax({
+                            url: "/reset-password",
+                            type: "POST",
+                            data:{
+                                "_token": "{{ csrf_token() }}",
+                                employeeID: empID
+                            },
+                            success:function(response){
+                                console.log(response);
+                                if(response=='success'){
+                                    $('#succ').show();
+                                    $("#succ").html("Password has been updated successfully!");
+                                    $("#succ").fadeTo(2000, 500).slideUp(500, function(){
+                                        $("#succ").slideUp(500);
+                                    });
+                                }
+                                
+                                //$('#setStatus').modal('hide');
+                            }
+                        });
+                    }
+
 
             </script>
             </div>

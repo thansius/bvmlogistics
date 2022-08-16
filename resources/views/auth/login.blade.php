@@ -47,13 +47,17 @@
                     <input class="form-check-input" type="checkbox" value="" id="rememberPasswordCheck">
                     <label class="form-check-label" for="rememberPasswordCheck">
                       Remember password
-                    </label>
+                    </label> <br>
+
                   </div>
                   <div class="d-grid">
                     <button class="btn btn-primary btn-login text-uppercase fw-bold" type="submit">Sign
                       in</button>
                   </div>
-                  
+                  <div style="text-align: right">
+                    <br>
+                    <small><i>Forgot password? Contact your administrator.<i></small>
+                  </div>
                 </form>
               </div>
             </div>

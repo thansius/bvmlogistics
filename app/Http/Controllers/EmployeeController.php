@@ -149,6 +149,23 @@ class EmployeeController extends Controller
         
     }
 
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'employeeID' => 'required'
+        ]);
+
+        $empDetails = Employee::where('employeeID', $request->employeeID)->first();
+        $password = strtolower(preg_replace('/\s*/', '', $empDetails->lastName)).substr(str_replace("-","",$empDetails->birthday), -6);
+
+        $employee = User::where('username',$request->employeeID)->first();
+        $employee->password = Hash::make($password);
+        $employee->save();
+        return 'success';
+
+        
+    }
+
     public static function countEmployees(){
         $employeeCount = Employee::count();
         return $employeeCount;

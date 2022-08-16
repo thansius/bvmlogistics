@@ -43,6 +43,7 @@ Route::post('getOne', 'App\Http\Controllers\PackageController@getPackage');
 Route::post('save-update', 'App\Http\Controllers\PackageController@updatePackageStatus');
 Route::post('save-profile', 'App\Http\Controllers\EmployeeController@updateProfile');
 Route::post('save-password', 'App\Http\Controllers\EmployeeController@updatePassword');
+Route::post('reset-password', 'App\Http\Controllers\EmployeeController@resetPassword');
 Route::resource('packages', PackageController::class);
 
 // Auth::routes();
