@@ -66,7 +66,7 @@ class EmployeeController extends Controller
 
         app('App\Http\Controllers\CustomAuthController')->create($data);
         return redirect()->route('employees.index')
-        ->with('success','Employee has been created successfully.');
+        ->with('success','Employee has been created successfully. Default Password is lastnameYYYYMMDD (ex. santos19990123)');
     }
 
 
