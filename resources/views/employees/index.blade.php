@@ -26,82 +26,107 @@
 
                             @if ($message = Session::get('success'))
                             <div class="alert alert-success">
-                                <p>{{ $message }}</p>
+                                <p id="succ">{{ $message }}</p>
                             </div>
                             @endif
-                            <div class="table-responsive">
-                            <table
-                                id="employees"
-                                class="table table-hover table-bordered dt-responsive display nowrap"
-                                cellspacing="0"
 
-                            >
-                                <thead>
-                                    <tr>
-                                        <th>Employee ID</th>
-                                        <th>Last Name</th>
-                                        <th>First Name</th>
-                                        <th>Middle Name</th>
-                                        <th>Birthday</th>
-                                        <th>Position</th>
-                                        <th>Department</th>
-                                        <th>Contact Number</th>
-                                        <th width="180px">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @if (count($employees) <= 0)
+                            
+                            <div class="tab-content table-responsive" id="ex1-content">
+                                
+                                <table
+                                    id="employees"
+                                    class="table table-hover table-bordered dt-responsive display nowrap"
+                                    cellspacing="0"
+
+                                >
+                                    <thead>
                                         <tr>
-                                            <td colspan="9" class="text-center"> No Employees Yet </td>
+                                            <th>Employee ID</th>
+                                            <th>Last Name</th>
+                                            <th>First Name</th>
+                                            <th>Middle Name</th>
+                                            <th>Birthday</th>
+                                            <th>Position</th>
+                                            <th>Department</th>
+                                            <th>Contact Number</th>
+                                            <th>Status</th>
+                                            <th width="180px">Action</th>
                                         </tr>
-                                    @else
-                                    @foreach ($employees as $employee)
-                                    <tr>
-                                        <td>{{ $employee->employeeID }}</td>
-                                        <td>{{ $employee->lastName }}</td>
-                                        <td>{{ $employee->firstName }}</td>
-                                        <td>{{ $employee->middleName }}</td>
-                                        <td>{{ date('M d, Y', strtotime($employee->birthday)) }}</td>
-                                        <td>{{ $employee->position }}</td>
-                                        <td>{{ $employee->department.' Department' }}</td>
-                                        <td>{{ $employee->contactNumber }}</td>
-                                        <td class="text-center">
-                                            
-                                                <a
-                                                    class="btn btn-primary btn-sm"
-                                                    href="{{ route('employees.edit',$employee->employeeID) }}"
-                                                    ><small
-                                                        class="fas fa-edit"
-                                                    ></small
-                                                    ></a
-                                                >
+                                    </thead>
+                                    <tbody>
+                                        @if (count($employees) <= 0)
+                                            <tr>
+                                                <td colspan="9" class="text-center"> No Employees Yet </td>
+                                            </tr>
+                                        @else
+                                        @foreach ($employees as $employee)
+                                        <tr>
+                                            <td>{{ $employee->employeeID }}</td>
+                                            <td>{{ $employee->lastName }}</td>
+                                            <td>{{ $employee->firstName }}</td>
+                                            <td>{{ $employee->middleName }}</td>
+                                            <td>{{ date('M d, Y', strtotime($employee->birthday)) }}</td>
+                                            <td>{{ $employee->position }}</td>
+                                            <td>{{ $employee->department.' Department' }}</td>
+                                            <td>{{ $employee->contactNumber }}</td>
+                                            @if ($employee->status == 1)
+                                                <td class="text-center align-middle"><span class="badge rounded-pill bg-success">Active</span></td>
+                                            @else
+                                                <td class="text-center align-middle"><span class="badge rounded-pill bg-danger">Inactive</span></td>
+                                            @endif
+                                            <td class="text-center">
                                                 
-                                                <a
-                                                    href="#myModal"
-                                                    class="btn btn-danger btn-sm delete"
-                                                    data-toggle="modal"
-                                                    data-id="{{ $employee->employeeID }}"
-                                                    data-target="#myModal"
-                                                >
-                                                    <small
-                                                        class="fas fa-trash"
-                                                    ></small>
-                                                </a>
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                    @endif
-                                </tbody>
-                            </table>
+                                                    <a
+                                                        class="btn btn-primary btn-sm"
+                                                        href="{{ route('employees.edit',$employee->employeeID) }}"
+                                                        ><small
+                                                            class="fas fa-edit"
+                                                        ></small
+                                                        ></a
+                                                    >
+                                                    
+                                                    @if ($employee->status == 1)
+                                                        <a
+                                                            href="#myModal"
+                                                            class="btn btn-danger btn-sm delete"
+                                                            data-toggle="modal"
+                                                            data-id="{{ $employee->employeeID }}"
+                                                            data-target="#myModal"
+                                                        >
+                                                            <small
+                                                                class="fas fa-trash"
+                                                            ></small>
+                                                        </a>
 
-                            {{-- <div class="d-flex justify-content-end">
-                                {{ $employees->links() }}
-                            </div>  --}}
-                        </div>
-                        </div>
+                                                    @else
+                                                        <a
+                                                            href="#myModal2"
+                                                            class="btn btn-success btn-sm reactivate"
+                                                            data-toggle="modal"
+                                                            data-id="{{ $employee->employeeID }}"
+                                                            data-target="#myModal2"
+                                                        >
+                                                            <small
+                                                                class="fas fa-upload"
+                                                            ></small>
+                                                        </a>
+                                                    @endif
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                        @endif
+                                    </tbody>
+                                </table>
+
+                                {{-- <div class="d-flex justify-content-end">
+                                    {{ $employees->links() }}
+                                </div>  --}}
+                            </div>
+                            
+                        
                     </div>
                 </div>
-
+            </div>
                 <div id="myModal" class="modal fade">
                     <div class="modal-dialog modal-confirm">
                         <div class="modal-content">
@@ -113,7 +138,7 @@
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                             </div>
                             <div class="modal-body">
-                                <p>Do you really want to delete this record? This process cannot be undone.</p>
+                                <p>Do you really want to deactivate this record?</p>
                             </div>
                             <div class="modal-footer justify-content-center">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -123,13 +148,49 @@
                                             >
                                             @csrf @method('DELETE')
                                             <input hidden id="id" name="id">
-                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                    <button type="submit" class="btn btn-danger">Deactivate</button>
                                 
                                 </form>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <div id="myModal2" class="modal fade">
+                    <div class="modal-dialog modal-confirm">
+                        <div class="modal-content">
+                            <div class="modal-header flex-column">
+                                <div class="icon-box2">
+                                    <i class="fas fa-question"></i>
+                                </div>						
+                                <h4 class="modal-title w-100">Are you sure?</h4>
+                                	
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Do you really want to reactivate this record?</p>
+                            </div>
+                            <div class="modal-footer justify-content-center">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                <form>
+                                    @csrf
+                                    <input hidden id="empid" name="empid">
+                                    <a onclick="reactivate()" class="btn btn-primary">Reactivate</a>
+                                </form>
+                                {{-- <form
+                                                action="{{ route('reactivate-employee','id') }}"
+                                                method="get"
+                                            >
+                                            @csrf 
+                                            <input hidden id="id" name="id">
+                                    <button type="submit" class="btn btn-primary">Reactivate</button>
+                                
+                                </form> --}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <style>.modal-confirm {		
                     color: #636363;
                     width: 400px;
@@ -177,8 +238,23 @@
                     text-align: center;
                     border: 3px solid #f15e5e;
                 }
+                .icon-box2 {
+                    width: 80px;
+                    height: 80px;
+                    margin: 0 auto;
+                    border-radius: 50%;
+                    z-index: 9;
+                    text-align: center;
+                    border: 3px solid #60C7C1;
+                }
                 .modal-confirm .icon-box i {
                     color: #f15e5e;
+                    font-size: 46px;
+                    display: inline-block;
+                    margin-top: 13px;
+                }
+                .icon-box2 i {
+                    color: #60C7C1;
                     font-size: 46px;
                     display: inline-block;
                     margin-top: 13px;
@@ -226,8 +302,18 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
         <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.3.1/js/buttons.html5.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
 
         <script>
+
+            $(document).on("click", ".reactivate", function () 
+                {
+
+                    let id = $(this).attr('data-id');
+                    //alert(id);
+                    $('#empid').val(id);
+                });
             $(document).on('click','.delete',function(){
                         let id = $(this).attr('data-id');
                         $('#id').val(id);
@@ -260,6 +346,36 @@
                         // 'print'
                     ],}
             );
+
+            function reactivate(){
+                    event.preventDefault();
+
+                    let empID = $('#empid').val();
+                    console.log(empID);
+                        $.ajax({
+                            url: "/reactivate-employee",
+                            type: "POST",
+                            data:{
+                                "_token": "{{ csrf_token() }}",
+                                empid: empID
+                            },
+                            success:function(response){
+                                console.log(response);
+                                if(response=='success'){
+                                    $('#myModal2').modal('hide');
+                                    location.reload();
+                                    $('#succ').show();
+                                    $("#succ").html("Employee has been reactivated successfully!");
+                                    $("#succ").fadeTo(2000, 500).slideUp(500, function(){
+                                        $("#succ").slideUp(500);
+                                    });
+                                    
+                                }
+                                
+                                //$('#setStatus').modal('hide');
+                            }
+                        });
+                    };
 
             table.buttons().container()
                 .appendTo( '#employees_wrapper .col-md-6:eq(0)' );    

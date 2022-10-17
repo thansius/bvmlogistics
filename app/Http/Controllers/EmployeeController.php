@@ -34,6 +34,11 @@ class EmployeeController extends Controller
         return view('employees.index', compact('employees'));
     }
 
+    public function getInactiveEmps(){
+        $employees = Employee::where('status', '=', 0)->orderBy('employeeID', 'desc')->get();
+        return $employees;
+    }
+
     public function create()
     {
         return view('employees.create');
@@ -187,8 +192,25 @@ class EmployeeController extends Controller
         $id = $request->id;
         app('App\Http\Controllers\CustomAuthController')->destroy($id);
 
-        DB::table('employees')->where('employeeID', $id)->delete();
+        $employee = Employee::find($id);
+        $employee->status = 0;
+        $employee->save();
         return redirect()->route('employees.index')
-        ->with('success','Employee has been deleted successfully.');
+        ->with('success','Employee has been deactivated successfully.');
+
+        // DB::table('employees')->where('employeeID', $id)->delete();
+        // return redirect()->route('employees.index')
+        // ->with('success','Employee has been deleted successfully.');
+    }
+
+    public function reactivate(Request $request)
+    {
+        
+        $id = $request->empid;
+
+        $employee = Employee::find($id);
+        $employee->status = 1;
+        $employee->save();
+        return 'success';
     }
 }

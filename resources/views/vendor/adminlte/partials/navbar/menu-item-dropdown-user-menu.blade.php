@@ -25,7 +25,7 @@
         <span @if(config('adminlte.usermenu_image')) class="d-none d-md-inline" @endif>
             <?php use App\Http\Controllers\CustomAuthController; 
                       $emps = CustomAuthController::getName();
-                      echo $emps['position'].': '.$emps['firstName'].' '.$emps['lastName'];
+                      echo $emps['department'].' '.$emps['position'].': <b>'.$emps['firstName'].' '.$emps['lastName'].'</b>';
                       ?>
         </span>
     </a>

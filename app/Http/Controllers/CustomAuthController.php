@@ -38,7 +38,7 @@ class CustomAuthController extends Controller
     public static  function getName(){
         $userData = DB::table('users')
                     ->join('employees', 'users.username', '=', 'employees.employeeID')
-                    ->select('employees.firstName', 'employees.lastName', 'employees.position')
+                    ->select('employees.firstName', 'employees.lastName', 'employees.position', 'employees.department')
                     ->where('username', auth()->user()->username)->first();
         // echo "<script>console.log('Debug Objects: " . $userData . "' );</script>";
         return json_decode(json_encode($userData), true);
@@ -91,7 +91,11 @@ class CustomAuthController extends Controller
 
     public function destroy($userid)
     {
-        DB::table('users')->where('username', $userid)->delete();
+        //DB::table('users')->where('username', $userid)->update();
+        $employee = User::where('username',$userid)->first();
+        $employee->status = 0;
+        $employee->save();
+        //return 'success';
     }
     
     public function signOut() {

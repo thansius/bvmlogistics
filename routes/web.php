@@ -32,6 +32,7 @@ Route::get('myform',array('as'=>'myform','uses'=>'PhilProvinceController@myform'
 Route::get('myform/ajax/{id}', [App\Http\Controllers\PhilProvinceController::class, 'myformAjax']);
 Route::get('trackmodal/ajax/{id}', [App\Http\Controllers\PackageController::class, 'getPackageProgress']);
 Route::get('getBarangays/ajax/{id}', [App\Http\Controllers\PhilProvinceController::class, 'getBarangays']);
+
 // Route::get('/employees', [App\Http\Controllers\EmployeeController::class, 'index'])->name('employee');
 Route::resource('employees', EmployeeController::class);
 Route::resource('customers', CustomerController::class);
@@ -44,6 +45,8 @@ Route::post('save-update', 'App\Http\Controllers\PackageController@updatePackage
 Route::post('save-profile', 'App\Http\Controllers\EmployeeController@updateProfile');
 Route::post('save-password', 'App\Http\Controllers\EmployeeController@updatePassword');
 Route::post('reset-password', 'App\Http\Controllers\EmployeeController@resetPassword');
+Route::post('reactivate-employee', 'App\Http\Controllers\EmployeeController@reactivate');
+
 Route::resource('packages', PackageController::class);
 
 // Auth::routes();
