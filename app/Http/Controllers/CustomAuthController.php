@@ -97,6 +97,15 @@ class CustomAuthController extends Controller
         $employee->save();
         //return 'success';
     }
+
+    public function reactivate($userid)
+    {
+        //DB::table('users')->where('username', $userid)->update();
+        $employee = User::where('username',$userid)->first();
+        $employee->status = 1;
+        $employee->save();
+        //return 'success';
+    }
     
     public function signOut() {
         Session::flush();

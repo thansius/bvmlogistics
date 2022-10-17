@@ -207,7 +207,7 @@ class EmployeeController extends Controller
     {
         
         $id = $request->empid;
-
+        app('App\Http\Controllers\CustomAuthController')->reactivate($id);
         $employee = Employee::find($id);
         $employee->status = 1;
         $employee->save();
