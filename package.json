@@ -24,7 +24,9 @@
         "sass-loader": "^11.0.1"
     },
     "dependencies": {
+        "@yaireo/validator": "^3.4.0",
         "font-awesome": "^4.7.0",
-        "jquery": "^3.6.0"
+        "jquery": "^3.6.0",
+        "jquery-validation": "^1.19.5"
     }
 }

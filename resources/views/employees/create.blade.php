@@ -60,6 +60,7 @@
                                     name="lastName"
                                     class="form-control"
                                     placeholder="Last Name"
+                                    aria-required="true"
                                 />
                                 @error('lastName')
                                 <div class="alert alert-danger mt-1 mb-1">
@@ -76,6 +77,7 @@
                                     name="firstName"
                                     class="form-control"
                                     placeholder="First Name"
+                                    aria-required="true"
                                 />
                                 @error('firstName')
                                 <div class="alert alert-danger mt-1 mb-1">
@@ -163,7 +165,7 @@
                                     <option value="Staff">
                                         Staff
                                     </option>
-                                    <option value="Carrier">Carrier</option>
+                                    {{-- <option value="Carrier">Carrier</option> --}}
                                 </select>
                                 @error('position')
                                 <div class="alert alert-danger mt-1 mb-1">
@@ -184,6 +186,7 @@
                                     name="contactNumber"
                                     class="form-control"
                                     id="contactNumber"
+                                    aria-required="true"
                                 />
                                 
                                 @error('contactNumber')
@@ -238,6 +241,7 @@
                     altFormat: "yyyy-mm-dd",
                     altField: "#altFormat"
                 });
+
                 
 
                 function phoneFormatter() {
@@ -256,7 +260,18 @@
                     });
                 };
 
-                $(phoneFormatter);      
+                $(phoneFormatter);   
+                
+                $("#dept").change(function() {
+    
+                    var el = $(this) ;
+                    
+                    if(el.val() === "Delivery" ) {
+                    $("#position").append('<option value="Carrier">Carrier</option>');
+                    }
+                    else if(el.val() !== "Delivery" ) {
+                        $("#position option[value='Carrier']").remove() ; }
+                });
             </script>
         </div>
     </div>

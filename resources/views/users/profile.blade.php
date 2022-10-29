@@ -97,14 +97,14 @@
                 $user = CustomAuthController::getUser();
             ?>
             <div class="card-body">
-                <form class="form">
+                <form class="form" >
                     <!-- Form Group (username)-->
                    
                     <!-- Form Row-->
                         <!-- Form Group (first name)-->
                         <div class="col">
                             <label class="small mb-1" for="oldPw">Old Password</label>
-                            <input class="form-control" name="oldPW" id="oldPw" type="password" placeholder="Enter your old password" disabled>
+                            <input class="form-control" name="oldPW" id="oldPw" type="password" placeholder="Enter your old password" disabled  aria-required="true" required>
                             @error('oldPW')
                                 <div class="alert alert-danger mt-1 mb-1">
                                     {{ $message }}
@@ -115,13 +115,29 @@
                     <!-- Form Row        -->
                         <!-- Form Group (organization name)-->
                         <div class="col">
-                            <label class="small mb-1" for="newPW">New Password</label>
-                            <input class="form-control" name="newPW" id="newPW" type="password" placeholder="Enter your new password" disabled>
+                            <div class="form-group">
+                            <label class="small mb-1" for="newPW" >New Password</label>
+                            <div class="input-group" id="show_hide_password">
+                            <input class="form-control" name="newPW" id="newPW" type="password" placeholder="Enter your new password" disabled aria-required="true" required>
+                            <div class="input-group-append">
+                                <button class="input-group-text" id="showPW"><i class="fa fa-eye-slash" aria-hidden="true"></i></button>
+                            </div>
+                            <span id="newPWspan" value="0"></span>
+                            </div>
+                            </div>
                         </div>
                         <!-- Form Group (location)-->
                         <div class="col">
-                            <label class="small mb-1" for="connewPW">Confirm New Password</label>
-                            <input class="form-control" name="connewPW" id="connewPW" type="password" placeholder="Confirm your new password" disabled>
+                            <div class="form-group">
+                                <label class="small mb-1" for="connewPW" >Confirm Password</label>
+                                <div class="input-group" id="show_hide_passwordCon">
+                                <input class="form-control" name="connewPW" id="connewPW" type="password" placeholder="Confirm your new password" disabled aria-required="true" required>
+                                <div class="input-group-append">
+                                    <button class="input-group-text" id="showPW"><i class="fa fa-eye-slash" aria-hidden="true"></i></button>
+                                </div>
+                                <span id="connewPWspan" value="0"></span>
+                                </div>
+                                </div>
                         </div>
                         <br>
 
@@ -174,10 +190,53 @@
             <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.3.4/inputmask/inputmask.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.3.4/inputmask/jquery.inputmask.js"></script>
             
-
+            <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
 
             
             <script>
+
+                function checkPassword()
+                {
+                    var str = $('#newPW').val()
+                    var re = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{10,}$/;
+                    return re.test(str);
+                };
+                $("#newPW").blur(function() 
+                {
+                    var re = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{10,}$/;  
+                    var str = $('#newPW').val()
+                    if(!re.test(str)) 
+                        $("#newPWspan").html('<font color="#cc0000">Password must be atleast 10 characters long and must contain an uppercase, lowercase, number and a special character.</font>');  
+                    else
+                        $("#newPWspan").html('<font color="#cc0000"></font>');  
+                });
+                
+                $("#show_hide_password button").on('click', function(event) {
+                    event.preventDefault();
+                    if($('#show_hide_password input').attr("type") == "text"){
+                        $('#show_hide_password input').attr('type', 'password');
+                        $('#show_hide_password i').addClass( "fa-eye-slash" );
+                        $('#show_hide_password i').removeClass( "fa-eye" );
+                    }else if($('#show_hide_password input').attr("type") == "password"){
+                        $('#show_hide_password input').attr('type', 'text');
+                        $('#show_hide_password i').removeClass( "fa-eye-slash" );
+                        $('#show_hide_password i').addClass( "fa-eye" );
+                    }
+                });
+                
+                $("#show_hide_passwordCon button").on('click', function(event) {
+                    event.preventDefault();
+                    if($('#show_hide_passwordCon input').attr("type") == "text"){
+                        $('#show_hide_passwordCon input').attr('type', 'password');
+                        $('#show_hide_passwordCon i').addClass( "fa-eye-slash" );
+                        $('#show_hide_passwordCon i').removeClass( "fa-eye" );
+                    }else if($('#show_hide_passwordCon input').attr("type") == "password"){
+                        $('#show_hide_passwordCon input').attr('type', 'text');
+                        $('#show_hide_passwordCon i').removeClass( "fa-eye-slash" );
+                        $('#show_hide_passwordCon i').addClass( "fa-eye" );
+                    }
+                });
 
                 $('#update').click(function() {
                     $("#savePro").prop("disabled",false);
@@ -193,6 +252,7 @@
                     $("#savePW").prop("disabled",false);
                     $("#oldPw").prop("disabled",false);
                     $("#newPW").prop("disabled",false);
+                    $("#showPW").prop("disabled",false);
                     $("#connewPW").prop("disabled",false);
                     $("#updatePW").prop("disabled",true);
                 });
@@ -313,6 +373,7 @@
                                     $("#oldPw").prop("disabled",true);
                                     $("#oldPw").val("");
                                     $("#newPW").prop("disabled",true);
+                                    $("#showPW").prop("disabled",true);
                                     $("#newPW").val("");
                                     $("#connewPW").prop("disabled",true);
                                     $("#connewPW").val("");
@@ -329,6 +390,7 @@
                                     $("#oldPw").prop("disabled",true);
                                     $("#oldPw").val("");
                                     $("#newPW").prop("disabled",true);
+                                    $("#showPW").prop("disabled",true);
                                     $("#newPW").val("");
                                     $("#connewPW").prop("disabled",true);
                                     $("#connewPW").val("");
@@ -350,6 +412,7 @@
                                     $("#oldPw").prop("disabled",true);
                                     $("#oldPw").val("");
                                     $("#newPW").prop("disabled",true);
+                                    $("#showPW").prop("disabled",true);
                                     $("#newPW").val("");
                                     $("#connewPW").prop("disabled",true);
                                     $("#connewPW").val("");

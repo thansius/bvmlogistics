@@ -23,6 +23,7 @@ class CreateEmployeesTable extends Migration
             $table->string('position');
             $table->string('department');
             $table->string('contactNumber')->nullable();
+            $table->integer('status')->default(1);
             $table->timestamps();
         });
 
