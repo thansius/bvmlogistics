@@ -67,8 +67,11 @@ class EmployeeController extends Controller
 
         $checker = Employee::where([
             ["firstName", "=", $request->firstName],
+            ["middleName", "=", $request->middleName],
             ["lastName", "=", $request->lastName],
-            ["birthday", "=", Carbon::parse($request->birthday)->format('Y-m-d')]
+            ["birthday", "=", Carbon::parse($request->birthday)->format('Y-m-d')],
+            ["position", "=", $request->position],
+            ["department", "=", $request->department]
         ])->count();
 
         if($checker == 0){
