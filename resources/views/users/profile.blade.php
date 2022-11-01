@@ -199,15 +199,15 @@
                 function checkPassword()
                 {
                     var str = $('#newPW').val()
-                    var re = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{10,}$/;
+                    var re = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
                     return re.test(str);
                 };
                 $("#newPW").blur(function() 
                 {
-                    var re = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{10,}$/;  
+                    var re = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;  
                     var str = $('#newPW').val()
                     if(!re.test(str)) 
-                        $("#newPWspan").html('<font color="#cc0000">Password must be atleast 10 characters long and must contain an uppercase, lowercase, number and a special character.</font>');  
+                        $("#newPWspan").html('<font color="#cc0000">Password must be atleast 8 characters long and must contain an uppercase, lowercase, number and a special character.</font>');  
                     else
                         $("#newPWspan").html('<font color="#cc0000"></font>');  
                 });
