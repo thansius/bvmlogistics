@@ -166,7 +166,7 @@ class CustomerController extends Controller
     }
 
     public function getProvince($provID){
-        $data = DB::table('refProvinces')
+        $data = DB::table('refprovinces')
                 ->where('provCode',$provID)
                 ->select('provDesc')
                 ->get();
