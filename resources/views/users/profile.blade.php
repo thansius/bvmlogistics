@@ -204,7 +204,7 @@
                 };
                 $("#newPW").blur(function() 
                 {
-                    var re = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;  
+                    var re = /^(?=.*[0-9])(?=.*[_!@#$%^&*])[a-zA-Z0-9_!@#$%^&*]{8,}$/;  
                     var str = $('#newPW').val()
                     if(!re.test(str)) 
                         $("#newPWspan").html('<font color="#cc0000">Password must be atleast 8 characters long and must contain an uppercase, lowercase, number and a special character.</font>');  
