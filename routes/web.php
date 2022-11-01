@@ -42,6 +42,7 @@ Route::get('/packages/delivered', 'App\Http\Controllers\PackageController@getDel
 Route::post('save-customer', 'App\Http\Controllers\CustomerController@storeViaPackage');
 Route::post('getOne', 'App\Http\Controllers\PackageController@getPackage');
 Route::post('save-update', 'App\Http\Controllers\PackageController@updatePackageStatus');
+Route::post('update-carrier', 'App\Http\Controllers\PackageController@updateCarrier');
 Route::post('save-profile', 'App\Http\Controllers\EmployeeController@updateProfile');
 Route::post('save-password', 'App\Http\Controllers\EmployeeController@updatePassword');
 Route::post('reset-password', 'App\Http\Controllers\EmployeeController@resetPassword');

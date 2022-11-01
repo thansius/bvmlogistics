@@ -265,6 +265,7 @@ class PackageController extends Controller
         $trackingNumber = $request->trackingNumber;
         $stat = $request->stat;
         $statDesc = $request->description;
+        $numAttempts = $request->numAttempts;
         $employee = Auth::user()->username;
 
         if($stat === 'Delivered'){
@@ -280,6 +281,7 @@ class PackageController extends Controller
                 ->where('trackingNumber',$trackingNumber)
                 ->update(['status' => 2]);
         }elseif($stat === 'Delivery Failed'){
+            $statDesc .= ' Delivery Attempts: ' . $numAttempts;
             DB::table('packages')
                 ->where('trackingNumber',$trackingNumber)
                 ->update(['status' => 4]);
@@ -291,6 +293,22 @@ class PackageController extends Controller
                 "updated_at" => \Carbon\Carbon::now('GMT+8'),]  
         );
         
+        return 'update successful';
+    }
+
+    public static function updateCarrier(Request $request){
+        $request->validate([
+            'packageID' => 'required',
+            'carrierID' => 'required'
+        ]);
+
+        $packageID = $request->packageID;
+        $carrierID = $request->carrierID;
+
+        DB::table('packages')
+                ->where('packageID',$packageID)
+                ->update(['carrierID' => $carrierID]);
+
         return 'update successful';
     }
 

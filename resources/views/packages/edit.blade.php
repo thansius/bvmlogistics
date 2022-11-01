@@ -62,10 +62,15 @@
                                 <div class="card card-warning">
                                     <div class="card-header">
                                         Carrier Details:
+                                        @if ($package->status == 1)
+                                            <button onclick="myFunction()" id="btnChangeCarrier" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" style="float:right">Change Carrier</button>
+
+                                        @endif
                                     </div>
                                     <div class="card-body">
-                                        <p><b>Carrier Name:</b> {{ $packageD->firstName.' '.$packageD->lastName}}</p>
-                                        <p><b>Carrier Contact Number:</b> {{ $packageD->eCNum}}</p>
+                                        <input type="hidden" id="carrierID">
+                                        <p><b>Carrier Name:</b> <span id="carrierName">{{ $packageD->firstName.' '.$packageD->lastName}}</span></p>
+                                        <p><b>Carrier Contact Number:</b> <span id="carrierNumber">{{ $packageD->eCNum}}</span></p>
                                     </div>
                                 </div>
                                 
@@ -113,13 +118,94 @@
                             
                             </fieldset>
                         </div>
+
+                        
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+{{-- Search Carrier Modal  --}}
 
+<div class="modal fade" id="smallModal" tabindex="-1" role="dialog" aria-labelledby="smallModalLabel"
+aria-hidden="true">
+<div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="modal-title">
+                <h5>Select a Carrier</h5>
+            </div>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body" id="smallBody">
+            {{-- <div class="input-group col-md-5">
+                <input class="form-control" id="myInput" type="text" onkeyup="searchCarrier()" placeholder="Search for carrier">
+                <div class="input-group-append">
+                    <div class="input-group-text"><i class="fas fa-search"></i></div>
+                </div>
+            </div>
+            <br> --}}
+            <div>
+                <table
+                    id="employees"
+                    class="table table-hover table-bordered dt-responsive display text-center"
+                >
+                    <thead>
+                        <tr>
+                            <th>Carrier ID</th>
+                            <th>Carrier Name</th>
+                            <th>Carrier Contact Number</th>
+                            <th width="70px">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php use App\Http\Controllers\EmployeeController;
+                              $employees = EmployeeController::getCarriers(); ?>
+                        @if (count($employees) <= 0)
+                            <tr>
+                                <td colspan="9" class="text-center"> No Carriers Yet </td>
+                            </tr>
+                        @endif
+                        @foreach ($employees as $employee)
+                        <tr>
+                            <td>{{ $employee->employeeID }}</td>
+                            <td>{{ $employee->firstName.' '.$employee->lastName }}</td>
+                            <td>{{ $employee->contactNumber }}</td>
+                            <td >
+                                    <a
+                                        class="btn btn-primary"
+                                        data-dismiss="modal"
+                                        onclick="selectCarrier('{{ $employee->employeeID }}', 
+                                                '{{ $employee->firstName.' '.$employee->lastName }}',
+                                                '{{ $employee->contactNumber }}')"
+                                        ><small>Select</small></a
+                                    >
+                            </td>
+                        </tr>
+                        @endforeach
+                        
+                    </tbody>
+                </table>
+
+                {{-- <div class="d-flex justify-content-end">
+                    {{ $employees->links() }}
+                </div>  --}}
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary float-end" data-dismiss="modal" aria-label="Close">
+                Cancel
+            </button>
+        </div>
+    </div>
+</div>
+</div>
+
+{{-- End of Search Carrier Modal  --}}
 <div class="modal fade" id="setStatus" tabindex="-1" role="dialog" aria-labeled="setStatusLabel" aria-hidden="true">
     <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
@@ -142,6 +228,11 @@
                         <option value="Cancelled">Cancelled</option>
                     </select>
                 </div>
+
+                <div class="form-group" id="attempts">
+                    <strong>Number of Delivery Attempts:</strong>
+                    <input class="form-control" id="numAttempts" type="number" placeholder="Enter number of delivery attempts">
+                </div>
                 <div class="form-group">
                     <strong>Status Description:</strong>
                     <textarea id="statDesc" class="form-control" placeholder="Enter status description of package" disabled>
@@ -160,17 +251,36 @@
     </div>
 </div>
 
+
+                <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
+                <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.bootstrap5.min.css">
+                <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+        
+                <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js" type="text/javascript"></script>
+                <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+                <script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
+                <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.bootstrap5.min.js"></script>
+                <script src="https://cdn.datatables.net/select/1.4.0/js/dataTables.select.min.js"></script>
+                <script src="https://cdn.datatables.net/datetime/1.1.2/js/dataTables.dateTime.min.js"></script>
+                <script src="https://cdn.datatables.net/buttons/1.4.0/js/buttons.print.min.js"></script>
+                <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.27/build/pdfmake.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+                <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+                <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.3.1/js/buttons.html5.min.js"></script>
+
 <script>
-    function openSetStatusModal(){
+    $("#attempts").hide();
+    function myFunction() {
         event.preventDefault();
         let href = $(this).attr('data-attr');
         $.ajax({
             url: href,
-            beforeSend: function(){
+            beforeSend: function() {
                 $('#loader').show();
             },
+            // return the result
             success: function(result) {
-                $('#setStatus').modal("show");
+                $('#smallModal').modal("show");
             },
             complete: function() {
                 $('#loader').hide();
@@ -183,6 +293,79 @@
             timeout: 8000
         })
     };
+
+    function selectCarrier(cID, cName, cNum){
+                            document.getElementById('carrierID').value = cID;
+                            document.getElementById('carrierName').value = cName;
+                            document.getElementById('carrierNumber').value = cNum;
+                            updateCarrier();
+                        };
+
+    function updateCarrier(){
+        event.preventDefault();
+
+        let packageID = '{{ $package->packageID }}';
+        let carrierID = $('#carrierID').val();
+
+        $.ajax({
+            url: "/update-carrier",
+            type: "POST",
+            data:{
+                "_token": "{{ csrf_token() }}",
+                packageID: packageID,
+                carrierID: carrierID
+            },
+            success:function(response){
+                console.log(response);
+                $(document).ajaxStop(function(){
+                    window.location.reload();
+                });
+                $('#smallModal').modal('hide');
+            }
+        });
+    }
+
+    function openSetStatusModal(){
+        event.preventDefault();
+        let href = $(this).attr('data-attr');
+        $.ajax({
+            url: href,
+            beforeSend: function(){
+                $('#loader').show();
+            },
+            success: function(result) {
+                $('#setStatus').modal("show");
+            },
+            complete: function() {
+                $("#status").prop("selectedIndex", 0);
+                $("#numAttempts").val("");
+                $("#statDesc").val("");
+                $("#numAttempts").attr("placeholder", "Enter number of delivery attempts");
+                $("#statDesc").attr("placeholder", "Enter status description of package");
+                $("#statDesc").prop("disabled", true);
+                $('#loader').hide();
+            },
+            error: function(jqXHR, testStatus, error) {
+                console.log(error);
+                alert("Page " + href + " cannot open. Error:" + error);
+                $('#loader').hide();
+            },
+            timeout: 8000
+        })
+    };
+
+    $("#status").change(function() {
+    
+        var el = $(this);
+        
+        if(el.val() === "Delivery Failed" ) {
+            $("#attempts").show();
+        }
+        else if(el.val() !== "Delivery Failed" ) {
+            $("#attempts").hide(); }
+    });
+
+
 
     function enableTextArea(){
         var val = $('#status').val();
@@ -201,6 +384,7 @@
 
         let trackingNumber = '{{ $package->trackingNumber }}';
         let statDesc = $('#statDesc').val();
+        let attempts = $('#numAttempts').val();
 
         if(val === 'Delivered'){
             statDesc = 'Package Delivered Successfully';
@@ -215,7 +399,8 @@
                 "_token": "{{ csrf_token() }}",
                 trackingNumber: trackingNumber,
                 stat: val,
-                description: statDesc
+                description: statDesc,
+                numAttempts: attempts
             },
             success:function(response){
                 console.log(response);

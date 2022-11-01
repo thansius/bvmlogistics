@@ -244,6 +244,17 @@
                     $('#contactNumber').val(number)
                 });
 
+                $("#dept").change(function() {
+                    
+                    var el = $(this) ;
+                    
+                    if(el.val() === "Delivery" ) {
+                    $("#position").append('<option value="Carrier">Carrier</option>');
+                    }
+                    else if(el.val() !== "Delivery" ) {
+                        $("#position option[value='Carrier']").remove() ; }
+                });
+
                 $('#birthday').datepicker({ endDate: '-18Y', format: 'MM dd, yyyy' });
 
                 function phoneFormatter() {
