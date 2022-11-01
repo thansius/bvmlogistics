@@ -182,7 +182,10 @@
                                     <option value="Staff" {{ $employee->position == 'Staff' ? 'selected="selected"' : ''; }}>
                                         Staff
                                     </option>
-                                    <option value="Carrier" {{ $employee->position == 'Carrier' ? 'selected="selected"' : ''; }}>Carrier</option>
+                                    @if ($employee->department == 'Delivery')
+                                        <option value="Carrier" {{ $employee->position == 'Carrier' ? 'selected="selected"' : ''; }}>Carrier</option>
+                                    @endif
+                                    
                                 </select>
                                 @error('position')
                                 <div class="alert alert-danger mt-1 mb-1">
