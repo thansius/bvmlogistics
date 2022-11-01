@@ -4,14 +4,12 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-lg-12 margin-tb">
-                    <div class="pull-left mb-2">
-                        <h2>Add New Package</h2>
-                    </div>
-                    <div class="pull-right">
+                    <div class="pull-left mb-2" >
+                        <h2 style="display:inline-block">Add New Package</h2>
                         <a
                             class="btn btn-secondary"
                             href="{{ route('packages.index') }}"
-                        >
+                            style="float:right">
                             Back</a
                         >
                     </div>
@@ -28,6 +26,9 @@
             <div class="alert alert-danger" id="err" role="alert" >
                 {{-- {{ session("status") }} --}}
                 
+            </div>
+            <div class="alert alert-success" id="succ" role="alert">
+                {{-- <p>{{ $message }}</p> --}}
             </div>
             <form
                 action="{{ route('packages.store') }}"
@@ -346,7 +347,7 @@
                                         </button>
                                     </div>
                                     <div class="modal-body" id="senderModalBody">
-                                        <form
+                                        <form id="senderForm"
                                             {{-- action="{{ route('customers.store') }}"
                                             method="POST"
                                             enctype="multipart/form-data" --}}
@@ -625,7 +626,7 @@
                                         </button>
                                     </div>
                                     <div class="modal-body" id="receiverModalBody">
-                                        <form
+                                        <form id="receiverForm"
                                             {{-- action="{{ route('customers.store') }}"
                                             method="POST"
                                             enctype="multipart/form-data" --}}
@@ -873,7 +874,7 @@
 
                                     <div class="modal-footer">
                                         <button type="button" onclick="submitReceiverDetails()" class="btn btn-primary float-end">
-                                            Save Reciever Information
+                                            Save Receiver Information
                                         </button>
                                         <button type="button" class="btn btn-secondary float-end" data-dismiss="modal" aria-label="Close">
                                             Cancel
@@ -933,8 +934,33 @@
                                     },
                                     success:function(response){
                                         console.log(response);
-                                        $('input[name="senderDetails"]').val(response[1]);
-                                        $('input[name="senderID"]').val(response[0]);
+                                        if(response != 'error')
+                                        {
+                                            $('input[name="senderDetails"]').val(response[1]);
+                                            $('input[name="senderID"]').val(response[0]);
+                                            
+                                            $('#succ').show();
+                                            $('#bre').show();
+                                            $("#succ").html("Sender saved successfully!");
+                                            $("#bre").fadeTo(2000, 500).slideUp(500, function(){
+                                                $("#bre").slideUp(500);
+                                            });
+                                            $("#succ").fadeTo(2000, 500).slideUp(500, function(){
+                                                $("#succ").slideUp(500);
+                                            });
+                                        }else{
+                                            $('#err').show();
+                                            $('#bre').show();
+                                            $("#err").html("Customer already exists. Please select from existing customers.");
+                                            $("#bre").fadeTo(2000, 500).slideUp(500, function(){
+                                                $("#bre").slideUp(500);
+                                            });
+                                            $("#err").fadeTo(2000, 500).slideUp(500, function(){
+                                                $("#err").slideUp(500);
+                                            });
+
+                                            $('#senderForm').trigger('reset');
+                                        }
                                         $('#senderModal').modal('hide');
                                     }
                                 });
@@ -972,9 +998,35 @@
                                     },
                                     success:function(response){
                                         console.log(response);
-                                        $('input[name="receiverDetails"]').val(response[1]);
-                                        $('input[name="receiverID"]').val(response[0]);
+                                        if(response != 'error')
+                                        {
+                                            $('input[name="receiverDetails"]').val(response[1]);
+                                            $('input[name="receiverID"]').val(response[0]);
+                                            
+                                            $('#succ').show();
+                                            $('#bre').show();
+                                            $("#succ").html("Receiver saved successfully!");
+                                            $("#bre").fadeTo(2000, 500).slideUp(500, function(){
+                                                $("#bre").slideUp(500);
+                                            });
+                                            $("#succ").fadeTo(2000, 500).slideUp(500, function(){
+                                                $("#succ").slideUp(500);
+                                            });
+                                        }else{
+                                            $('#err').show();
+                                            $('#bre').show();
+                                            $("#err").html("Customer already exists. Please select from existing customers.");
+                                            $("#bre").fadeTo(2000, 500).slideUp(500, function(){
+                                                $("#bre").slideUp(500);
+                                            });
+                                            $("#err").fadeTo(2000, 500).slideUp(500, function(){
+                                                $("#err").slideUp(500);
+                                            });
+                                            $('#receiverForm').trigger('reset');
+
+                                        }
                                         $('#receiverModal').modal('hide');
+
                                     }
                                 });
                             };
@@ -1241,6 +1293,7 @@
                     <script>
                         $(document).ready(function() {	
                             $('#err').hide();
+                            $('#succ').hide();
                             $('#bre').hide();
                             // setInputFilter(document.getElementById("weight"), function(value) {
                             //     return /^\d*\.?\d*$/.test(value); // Allow digits and '.' only, using a RegExp
@@ -1429,6 +1482,7 @@
                                 },
                                 complete: function() {
                                     $('#loader').hide();
+                                    
                                 },
                                 error: function(jqXHR, testStatus, error) {
                                     console.log(error);

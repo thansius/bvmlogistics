@@ -9,6 +9,10 @@
                     <div class="alert alert-success" role="alert">
                         {{ session("status") }}
                     </div>
+                    
+                    <div class="alert alert-danger mb-1 mt-1">
+                        {{ session("status") }}
+                    </div>
                     @endif
 
                     <div class="row">
@@ -27,6 +31,10 @@
                             @if ($message = Session::get('success'))
                             <div class="alert alert-success">
                                 <p id="succ">{{ $message }}</p>
+                            </div>
+                            @elseif ($message = Session::get('error'))
+                            <div class="alert alert-danger">
+                                <p id="err">{{ $message }}</p>
                             </div>
                             @endif
 

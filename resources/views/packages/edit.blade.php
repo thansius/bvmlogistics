@@ -11,6 +11,14 @@
                     </div>
                     @endif
 
+                    <div class="alert alert-danger" id="err" role="alert" >
+                        {{-- {{ session("status") }} --}}
+                        
+                    </div>
+                    <div class="alert alert-success" id="succ" role="alert">
+                        {{-- <p>{{ $message }}</p> --}}
+                    </div>
+
                     <div class="row">
                         <div class="col-lg-12 margin-tb">
                             <div>
@@ -63,7 +71,7 @@
                                     <div class="card-header">
                                         Carrier Details:
                                         @if ($package->status == 1)
-                                            <button onclick="myFunction()" id="btnChangeCarrier" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" style="float:right">Change Carrier</button>
+                                            <button onclick="myFunction()" id="btnChangeCarrier" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal" style="float:right">Change Carrier</button>
 
                                         @endif
                                     </div>
@@ -156,8 +164,8 @@ aria-hidden="true">
                     <thead>
                         <tr>
                             <th>Carrier ID</th>
-                            <th>Carrier Name</th>
-                            <th>Carrier Contact Number</th>
+                            <th width="200px">Carrier Name</th>
+                            <th width="150px">Carrier Contact Number</th>
                             <th width="70px">Action</th>
                         </tr>
                     </thead>
@@ -269,7 +277,11 @@ aria-hidden="true">
                 <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.3.1/js/buttons.html5.min.js"></script>
 
 <script>
-    $("#attempts").hide();
+    $(document).ready(function() {	
+        $('#succ').hide();
+        $('#err').hide();
+        $("#attempts").hide();
+    });
     function myFunction() {
         event.preventDefault();
         let href = $(this).attr('data-attr');
@@ -321,6 +333,11 @@ aria-hidden="true">
                     window.location.reload();
                 });
                 $('#smallModal').modal('hide');
+                // $('#succ').show();
+                // $("#succ").html("Assigned Carrier Updated!");
+                // $("#succ").fadeTo(2000, 500).slideUp(500, function(){
+                //     $("#succ").slideUp(500);
+                // });
             }
         });
     }
@@ -344,6 +361,12 @@ aria-hidden="true">
                 $("#statDesc").attr("placeholder", "Enter status description of package");
                 $("#statDesc").prop("disabled", true);
                 $('#loader').hide();
+
+                $('#succ').show();
+                $("#succ").html("Package Status Updated!");
+                $("#succ").fadeTo(2000, 500).slideUp(500, function(){
+                    $("#succ").slideUp(500);
+                });
             },
             error: function(jqXHR, testStatus, error) {
                 console.log(error);
@@ -411,6 +434,7 @@ aria-hidden="true">
             }
         });
     }
+    $('#employees').DataTable();  
 </script>
 
 <style>
@@ -426,6 +450,9 @@ aria-hidden="true">
         width:inherit; /* Or auto */
         padding:0 10px; /* To give a bit of padding on the left and right */
         border-bottom:none;
+    }
+    table.dataTable tbody th, table.dataTable tbody td {
+        padding: 2px 10px; 
     }
 </style>
 

@@ -56,22 +56,47 @@ class EmployeeController extends Controller
             'department' => 'required',
             'contactNumber' => 'nullable|regex:/^([0-9\s\-\+\(\)]*)$/|min:11'
         ]);
-
-        $employee = new Employee();
-        $employee->lastName = $request->lastName;
-        $employee->firstName = $request->firstName;
-        $employee->middleName = $request->middleName;
-        $employee->position = $request->position;
-        $employee->birthday = Carbon::parse($request->birthday)->format('Y-m-d');
-        $employee->department = $request->department;
-        $employee->contactNumber = $request->contactNumber;
-        $employee->save();
         
-        $data = [$request->employeeID, strtolower(preg_replace('/\s*/', '', $request->lastName)).substr(str_replace("-","",$employee->birthday), -6) ,$employee->position];
+        // $checker = DB::select("SELECT * FROM `employees` WHERE `lastName` = '$request->lastName' AND `firstName` = '$request->firstName' AND `middleName` = '$request->middleName' AND `birthday` = '$request->birthday' AND `department`='$request->department' AND `position` = '$request->position';");
+        // $checker = Employee::where("lastName", "=", $request->lastName)
+        //     ->where("firstName", "=", $request->firstName)
+        //     ->where("middleName", "=", $request->middleName)
+        //     ->where("birthday", "=", $request->birthday)
+        //     ->where("department", "=", $request->department)
+        //     ->where("position", "=", $request->position)->count();
 
-        app('App\Http\Controllers\CustomAuthController')->create($data);
-        return redirect()->route('employees.index')
-        ->with('success','Employee has been created successfully. Default Password is Last Name + Date Of Birth(YYMMDD) (ex. santos990123)');
+        $checker = Employee::where([
+            ["firstName", "=", $request->firstName],
+            ["middleName", "=", $request->middleName],
+            ["lastName", "=", $request->lastName],
+            ["birthday", "=", Carbon::parse($request->birthday)->format('Y-m-d')],
+            ["position", "=", $request->position],
+            ["department", "=", $request->department]
+        ])->count();
+
+        if($checker == 0){
+            $employee = new Employee();
+            $employee->lastName = $request->lastName;
+            $employee->firstName = $request->firstName;
+            $employee->middleName = $request->middleName;
+            $employee->position = $request->position;
+            $employee->birthday = Carbon::parse($request->birthday)->format('Y-m-d');
+            $employee->department = $request->department;
+            $employee->contactNumber = $request->contactNumber;
+            $employee->save();
+            
+            $data = [$request->employeeID, strtolower(preg_replace('/\s*/', '', $request->lastName)).substr(str_replace("-","",$employee->birthday), -6) ,$employee->position];
+    
+            app('App\Http\Controllers\CustomAuthController')->create($data);
+            return redirect()->route('employees.index')
+            ->with('success','Employee has been created successfully. Default Password is Last Name + Date Of Birth(YYMMDD) (ex. santos990123)');
+        }
+        else{
+            return redirect()->route('employees.index')
+            ->with('error','Employee already exists.');
+        }
+
+        
     }
 
 

@@ -54,23 +54,41 @@ class CustomerController extends Controller
             'zipCode' => 'nullable',
         ]);
 
-        $customer = new Customer();
-        $customer->lastName = $request->lastName;
-        $customer->firstName = $request->firstName;
-        $customer->middleName = $request->middleName;
-        $customer->contactNumber = $request->contactNumber;
-        $customer->floor_unit = $request->floor_unit;
-        $customer->streetAddress = $request->streetAddress;
-        $customer->province = $request->province;
-        $customer->city_municipality = $request->city_municipality;
-        $customer->barangay = $request->barangay;
-        $customer->zipCode = $request->zipCode;
-        $customer->status = 1;
 
-        $customer->save();
+        $checker = Customer::where([
+            ["firstName", "=", $request->firstName],
+            ["middleName", "=", $request->middleName],
+            ["lastName", "=", $request->lastName],
+            ["contactNumber", "=", $request->contactNumber],
+            ["floor_unit", "=", $request->floor_unit],
+            ["streetAddress", "=", $request->streetAddress],
+            ["province", "=", $request->province],
+            ["barangay", "=", $request->barangay]
+        ])->count();
 
-        return redirect()->route('customers.index')
-        ->with('success','Customer has been added successfully.');
+        if($checker == 0){
+
+            $customer = new Customer();
+            $customer->lastName = $request->lastName;
+            $customer->firstName = $request->firstName;
+            $customer->middleName = $request->middleName;
+            $customer->contactNumber = $request->contactNumber;
+            $customer->floor_unit = $request->floor_unit;
+            $customer->streetAddress = $request->streetAddress;
+            $customer->province = $request->province;
+            $customer->city_municipality = $request->city_municipality;
+            $customer->barangay = $request->barangay;
+            $customer->zipCode = $request->zipCode;
+            $customer->status = 1;
+
+            $customer->save();
+
+            return redirect()->route('customers.index')
+            ->with('success','Customer has been added successfully.');
+        }else{
+            return redirect()->route('customers.index')
+            ->with('error','Customer already exists.');
+        }
         // return response()->json(['success'=>'Successfully']);
     }
 
@@ -88,37 +106,53 @@ class CustomerController extends Controller
             'zipCode' => 'nullable',
         ]);
 
-        $customer = new Customer();
-        $customer->lastName = $request->lastName;
-        $customer->firstName = $request->firstName;
-        $customer->middleName = $request->middleName;
-        $customer->contactNumber = $request->contactNumber;
-        $customer->floor_unit = $request->floor_unit;
-        $customer->streetAddress = $request->streetAddress;
-        $customer->province = $request->province;
-        $customer->city_municipality = $request->city_municipality;
-        $customer->barangay = $request->barangay;
-        $customer->zipCode = $request->zipCode;
-        $customer->status = 1;
+        $checker = Customer::where([
+            ["firstName", "=", $request->firstName],
+            ["middleName", "=", $request->middleName],
+            ["lastName", "=", $request->lastName],
+            ["contactNumber", "=", $request->contactNumber],
+            ["floor_unit", "=", $request->floor_unit],
+            ["streetAddress", "=", $request->streetAddress],
+            ["province", "=", $request->province],
+            ["barangay", "=", $request->barangay]
+        ])->count();
 
-        $customer->save();
+        if($checker == 0){
+            $customer = new Customer();
+            $customer->lastName = $request->lastName;
+            $customer->firstName = $request->firstName;
+            $customer->middleName = $request->middleName;
+            $customer->contactNumber = $request->contactNumber;
+            $customer->floor_unit = $request->floor_unit;
+            $customer->streetAddress = $request->streetAddress;
+            $customer->province = $request->province;
+            $customer->city_municipality = $request->city_municipality;
+            $customer->barangay = $request->barangay;
+            $customer->zipCode = $request->zipCode;
+            $customer->status = 1;
 
-        $id = $customer->id;
+            $customer->save();
 
-        $province = $this->getProvince($request->province);
-        $city = $this->getCity($request->city_municipality);
-        $barangay = $this->getBarangay($request->barangay);
+            $id = $customer->id;
 
-        // print_r(array_column($province, 'provDesc')[0]);
+            $province = $this->getProvince($request->province);
+            $city = $this->getCity($request->city_municipality);
+            $barangay = $this->getBarangay($request->barangay);
 
-        $details = $request->firstName.' '.$request->lastName.' '.
-                    $request->contactNumber.' '.$request->floor_unit.', '.
-                    $request->streetAddress.', '.array_column($barangay, 'brgyDesc')[0].', '.
-                    array_column($city, 'citymunDesc')[0].', '.array_column($province, 'provDesc')[0];
+            // print_r(array_column($province, 'provDesc')[0]);
 
-        $custdata[0] = $id;
-        $custdata[1] = $details;
-        return $custdata;
+            $details = $request->firstName.' '.$request->lastName.' '.
+                        $request->contactNumber.' '.$request->floor_unit.', '.
+                        $request->streetAddress.', '.array_column($barangay, 'brgyDesc')[0].', '.
+                        array_column($city, 'citymunDesc')[0].', '.array_column($province, 'provDesc')[0];
+
+            $custdata[0] = $id;
+            $custdata[1] = $details;
+            return $custdata;
+        }else{
+            return 'error';
+        }
+        
     }
 
     public function show(Customer $package)

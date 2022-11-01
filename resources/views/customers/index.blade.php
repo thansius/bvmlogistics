@@ -28,6 +28,10 @@
                             <div class="alert alert-success">
                                 <p>{{ $message }}</p>
                             </div>
+                            @elseif ($message = Session::get('error'))
+                            <div class="alert alert-danger">
+                                <p id="err">{{ $message }}</p>
+                            </div>
                             @endif
                             <div class="table-responsive">
                             <table
