@@ -223,7 +223,7 @@ class PackageController extends Controller
     public static function getNextID(){
         $statement = DB::select("SHOW TABLE STATUS LIKE 'packages'");
         $nextId = $statement[0]->Auto_increment;
-        return $nextId + 1;
+        return $nextId;
     }
 
     public static function getNextTrackingNumber(){
