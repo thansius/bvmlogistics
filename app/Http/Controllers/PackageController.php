@@ -221,6 +221,7 @@ class PackageController extends Controller
     }
 
     public static function getNextID(){
+        $statementRaw = DB::raw("SET information_schema_stats_expiry = 0;");
         $statement = DB::select("SHOW TABLE STATUS LIKE 'packages'");
         $nextId = $statement[0]->Auto_increment;
         return $nextId;
