@@ -221,11 +221,13 @@ class PackageController extends Controller
     }
 
     public static function getNextID(){
-        $statementRaw = DB::raw("SET information_schema_stats_expiry = 0;");
-        $statementRaw;
-        $statement = DB::select("SHOW TABLE STATUS LIKE 'packages'");
-        $nextId = $statement[0]->Auto_increment;
-        return $nextId;
+        // $statementRaw = DB::raw("SET information_schema_stats_expiry = 0;");
+        // $statementRaw;
+        // $statement = DB::select("SHOW TABLE STATUS LIKE 'packages';");
+        // $nextId = $statement[0]->Auto_increment;
+        $lastID = DB::select('SELECT packageID FROM packages ORDER BY created_at DESC LIMIT 1');
+        $nextID =  $lastID[0]->packageID + 1;
+        return $nextID;
     }
 
     public static function getNextTrackingNumber(){
