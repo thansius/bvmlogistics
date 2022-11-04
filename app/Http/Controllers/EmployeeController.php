@@ -208,7 +208,9 @@ class EmployeeController extends Controller
     }
 
     public static function getCarriers(){
-        $employees = Employee::where('position', '=', 'Carrier')->orderBy('employeeID', 'desc')->get();
+        $employees = Employee::where('position', '=', 'Carrier')
+                               ->where('status', '=', 1)
+                               ->orderBy('employeeID', 'desc')->get();
         return $employees;
     }
 
